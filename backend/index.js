@@ -44,27 +44,45 @@ app.get('/', (req, res) => {
 })
 app.post('/signup', async (req, res) => {
     console.log(req.body);
-    const { email } = req.body
-    userModel.findOne({ email: email }), function (err, result) {
-        // if(err) throw err;
-        console.log(result)
-        console.log(err)
+    const { email } = req.body;
+
+    try {
+        const result = await userModel.findOne({ email: email });
+
         if (result) {
-            res.send({ message: "Email already registered" })
+            res.send({ message: "Email already registered", alert: true });
+        } else {
+            const data = new userModel(req.body);
+            const savedData = await data.save();
+            res.send({ message: "Successfully registered", alert: false });
         }
-        else {
-            const data = userModel(req.body)
-            const save = data.save()
-            res.send({ message: "successfully Rgistered" })
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Internal server error" });
+    }
+});
+
+app.post('/login', async (req, res) => {
+    console.log(req.body);
+
+    const { email } = req.body
+    const result = await userModel.findOne({ email: email })
+    if (result) {
+        console.log(result)
+        const dataSend = {
+            _id: result._id,
+            firstName: result.firstName,
+            lastName: result.lastName,
+            email: result.email,
+            image: result.image,
         }
+        console.log(dataSend)
+        res.send({ message: "Login Successfully", alert: true, data: dataSend })
+    } else {
+        res.send({ message: "Email is not registered", alert: false })
     }
 
-
 })
-// app.post('/login',(req,res)=>{
-//     console.log(req.body);
-
-// })
 
 
 

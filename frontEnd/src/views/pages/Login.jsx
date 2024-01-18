@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { BiShowAlt, BiSolidHide } from "react-icons/bi";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { loginRedux } from "../../redux/userSlice";
+import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import {loginRedux} from '../../redux/index'
 
 const Login = () => {
 
@@ -14,9 +15,11 @@ const Login = () => {
 
   const navigate = useNavigate()
 
-  const loginData = useSelector(state => state);
-  console.log(loginData)
-  const dispatch = useDispatch();
+  const loginData=useSelector(state=>state)
+  console.log(loginData.user)
+ 
+  const dispatch=useDispatch()
+
 
   console.log(userData)
   const handleShowPassword = () => {
@@ -37,26 +40,25 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = userData
     if (email && password) {
-      console.log(email,password)
-      console.log(import.meta.env.VITE_SERVER_DOMAIN)
-      // const fetchLoginDetails = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/login`, {
-      //   method: "POST",
-      //   headers: {
-      //     "content-type": "application/json"
-      //   },
-      //   body: JSON.stringify(userData)
-      // })
-      // alert('succcess');
-      // navigate('/')
-      // const data = fetchLoginDetails.json();
-      // console.log(data);
-      if (userData) {
-        dispatch(loginRedux(userData))
+      const fetchLoginDetails = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/login`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify(userData)
+      })
+
+      const data = await fetchLoginDetails.json()
+      console.log(data)
+      toast(data.message)
+      
+      if (data.alert) {
+        dispatch(loginRedux(data))
         setTimeout(() => {
           navigate('/')
         }, 1000)
-      }
 
+      }
     } else {
       alert('Please fill the fields')
     }
@@ -113,31 +115,3 @@ const Login = () => {
 }
 
 export default Login
-
-
-
-
-
-
-// const MongoClient = require('mongodb').MongoClient;
-
-// // Connect to the MongoDB server
-// MongoClient.connect('mongodb://localhost:27017/', function(err, client) {
-//   if (err) throw err;
-
-//   // Get the sample database
-//   const db = client.db('sample');
-
-//   // Get the collection
-//   const collection = db.collection('test');
-
-//   // Insert a document
-//   collection.insertOne({ name: 'John', age: 30 }, function(err, result) {
-//     if (err) throw err;
-
-//     console.log(result);
-
-//     // Close the connection
-//     client.close();
-//   });
-// });

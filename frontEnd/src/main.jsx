@@ -10,8 +10,8 @@ import About from './views/pages/About.jsx'
 import Login from './views/pages/Login.jsx'
 import AddProduct from './views/pages/AddProduct.jsx'
 import Signup from './views/pages/SignUp.jsx'
-import { store } from './redux/index.js'
-import { Provider } from 'react-redux'
+import {store} from './redux/index.js'
+import {Provider} from 'react-redux'
 
 
 const router = createBrowserRouter(

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BiShowAlt, BiSolidHide } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { ImageToBase64 } from "../../utils/ImageToBase64";
-import toast, { Toaster } from 'react-hot-toast'
+import { toast } from 'react-hot-toast'
 
 
 const Signup = () => {
@@ -48,35 +48,36 @@ const Signup = () => {
         console.log(data);
     }
 
-    console.log(process.env.VITE_SERVER_DOMAIN)
+    console.log(import.meta.env.VITE_SERVER_DOMAIN)
     const handleSubmit = async (e) => {
-        // e.preventDefault();
-        // const { firstName, email, password, confirmPassword } = userData
-        // if (firstName && email && password && confirmPassword) {
-        //     if (password === confirmPassword) {
-        //         // console.log(userData)
-        //         // const fetchUserDetails = await fetch(`${process.env.VITE_SERVER_DOMAIN}/signup`, {
-        //         //     method: "POST",
-        //         //     headers: {
-        //         //         "content-type": "application/json"
-        //         //     },
-        //         //     body: JSON.stringify(userData)
-        //         // })
-        //         // const data = await fetchUserDetails.json();
-        //         // console.log(data)
-        //         alert("success")
-        //         // navigate('/login')
-        //     } else {
-        //         alert('Password is not matching')
-        //     }
-        // } else {
-        //     alert('Please fill the fields')
-        // }
+        e.preventDefault();
+        const { firstName, email, password, confirmPassword } = userData
+        if (firstName && email && password && confirmPassword) {
+            if (password === confirmPassword) {
+                console.log(userData)
+                const fetchUserDetails = await fetch(`${import.meta.env.VITE_SERVER_DOMAIN}/signup`, {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify(userData)
+                })
+                const data = await fetchUserDetails.json();
+                console.log(data)
+                toast(data.message)
+                if (data.alert) {
+                    navigate('/login')
+                }
+            } else {
+                alert('Password is not matching')
+            }
+        } else {
+            alert('Please fill the fields')
+        }
     }
 
     return (
         <>
-            <Toaster />
             <div className="p-2 md:p-4">
                 <div className="w-full bg-white m-auto max-w-sm flex items-center flex-col p-4">
                     {/* <h1 className="text-2xl font-bold">Sign up</h1> */}
